@@ -1,0 +1,17 @@
+{
+  "name": "minimal-beamer",
+  "owner": {
+    "name": "Icarus",
+    "url": "https://github.com/Icarus603"
+  },
+  "description": "Build LaTeX Beamer presentations from a bundled minimal academic template. Clarify, compile, visually self-review, and iterate until done.",
+  "plugins": [
+    {
+      "name": "minimal-beamer",
+      "source": "./",
+      "description": "LaTeX Beamer presentation builder with multi-round clarification, auto engine selection, visual self-review, and mandatory revision loop.",
+      "version": "1.0.0",
+      "license": "MIT"
+    }
+  ]
+}
