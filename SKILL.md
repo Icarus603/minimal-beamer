@@ -74,7 +74,7 @@ instead of `./script.sh`).
 Run the bundled environment-check script:
 
 ```bash
-bash ~/.claude/skills/minimal-beamer/scripts/check_env.sh
+bash ${CLAUDE_PLUGIN_ROOT}/scripts/check_env.sh
 ```
 
 It detects the OS, looks for `pdflatex` / `xelatex` / `lualatex` / `latexmk`
@@ -416,7 +416,7 @@ Why: keeps the deck dir scannable, plays nicely with `git init`, and lets
 
 1. Copy the template into the working directory:
    ```bash
-   cp -r ~/.claude/skills/minimal-beamer/assets/template/ ./<deck-name>/
+   cp -r ${CLAUDE_PLUGIN_ROOT}/assets/template/ ./<deck-name>/
    ```
    Use a sensible directory name based on the talk title.
 2. Edit `main.tex` in place. Update `\title`, `\author`, `\institute`,
@@ -446,7 +446,7 @@ whitespace. If a frame is overflowing, split it or add `[allowframebreaks]`.
 Run the build script and fix anything it reports:
 
 ```bash
-bash ~/.claude/skills/minimal-beamer/scripts/build.sh ./<deck-name>/main.tex
+bash ${CLAUDE_PLUGIN_ROOT}/scripts/build.sh ./<deck-name>/main.tex
 ```
 
 The PDF lands at `./<deck-name>/build/main.pdf`. All intermediate files
@@ -461,7 +461,7 @@ detects and uses `xelatex`. Read the log on failure, fix the actual error
 
 To wipe build artifacts (e.g. before sharing the source):
 ```bash
-bash ~/.claude/skills/minimal-beamer/scripts/clean.sh ./<deck-name>/
+bash ${CLAUDE_PLUGIN_ROOT}/scripts/clean.sh ./<deck-name>/
 # or  ... clean.sh ./<deck-name>/ --all   # also removes stray intermediates next to .tex
 ```
 
@@ -477,7 +477,7 @@ Use the bundled rasterizer to convert the PDF to per-slide PNGs. Point it
 at the built PDF (which lives under `build/`):
 
 ```bash
-bash ~/.claude/skills/minimal-beamer/scripts/preview.sh ./<deck-name>/build/main.pdf
+bash ${CLAUDE_PLUGIN_ROOT}/scripts/preview.sh ./<deck-name>/build/main.pdf
 ```
 
 This drops PNGs into `./<deck-name>/build/_preview/slide-NN.png` (one per
