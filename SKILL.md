@@ -378,6 +378,13 @@ Rules:
 
 ## Step 3 — Build the deck from the template
 
+**Script selection reminder.** Steps 3–5 invoke bundled scripts. All four
+scripts ship in `.sh` (macOS / Linux / WSL) and `.ps1` (Windows PowerShell)
+variants with identical behavior. The code blocks below show the bash
+syntax; on Windows PowerShell, substitute `.sh` → `.ps1` and use
+`& "${env:CLAUDE_PLUGIN_ROOT}\scripts\<name>.ps1"` instead of
+`bash ${CLAUDE_PLUGIN_ROOT}/scripts/<name>.sh`.
+
 ### Source / build separation
 
 The skill keeps source files clean and isolates compile artifacts in a
