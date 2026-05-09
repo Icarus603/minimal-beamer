@@ -88,8 +88,9 @@ exits with `0` (ready), `1` (partial — e.g. has `pdflatex` but missing
 support) and proceed to Step 1.
 
 **Exit 1 — partial.** You have `pdflatex` but no `xelatex`/`fontspec` →
-English deck is fine, but you must warn the user before they pick CJK in
-Round 1, and offer the install command for the missing piece. Or you have
+English deck is fine, but you must warn the user before they pick CJK
+during clarification, and offer the install command for the missing piece.
+Or you have
 no `latexmk` → fine, the build script falls back to raw `pdflatex` calls.
 
 **Exit 2 — no LaTeX installed.** Stop. Do NOT start the clarification
@@ -275,7 +276,7 @@ You cannot pick the right depth or tone without these.
   for CJK. If the user just says 中文, ask 繁體 vs. 简体. **Font default for
   CJK is the system default that `xeCJK` picks up — same spirit as the
   English template, which uses Beamer's default Computer Modern.** Do not
-  hardcode a CJK font unless the user asks; only bring fonts up in Round 5
+  hardcode a CJK font unless the user asks; only bring fonts up in the style polish section
   as an optional knob.
 
 #### Content scope and source material
@@ -346,8 +347,6 @@ style (e.g. "投資人 pitch" probably wants 16:9 + a colored theme).
   {beamer}`)?
 - Anything they hate? (Common: "no clip art", "no emoji", "no gradients", "no
   reveal animations".)
-
-### When to stop asking
 
 ### Step 1.3 — Stop condition
 
@@ -435,7 +434,7 @@ Why: keeps the deck dir scannable, plays nicely with `git init`, and lets
    preamble. **Do not add `\setCJKmainfont{...}` by default** — let `xeCJK`
    pick the system default, which mirrors how the English template uses
    Beamer's default Computer Modern. Only set a CJK font if the user
-   explicitly chose one in Round 5. The build script auto-detects `xeCJK` /
+   explicitly chose one during style clarification. The build script auto-detects `xeCJK` /
    `fontspec` and switches to `xelatex` for you.
 
 Keep slides genuinely minimal: short bullets, one idea per frame, ample
@@ -628,7 +627,7 @@ the revision loop at Step 6a. Same exit condition.
 For small mechanical edits ("change slide 4 title", "add a frame about X
 after section 2") you can do the edit first then ask if anything else
 needs adjusting in one round — but you still ask. For non-trivial edits
-(re-target audience, change length) run an abbreviated Round 1
+(re-target audience, change length) run an abbreviated
 clarification (audience + new length + what to cut/keep), then build, then
 revision loop.
 
