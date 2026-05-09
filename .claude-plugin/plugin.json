@@ -1,0 +1,13 @@
+{
+  "name": "minimal-beamer",
+  "version": "1.0.0",
+  "description": "Build LaTeX Beamer presentations from the bundled minimal template. Multi-round clarification, automatic compilation (pdflatex/xelatex), visual self-review, and mandatory revision loop until you're satisfied.",
+  "author": {
+    "name": "Icarus",
+    "url": "https://github.com/Icarus603"
+  },
+  "homepage": "https://github.com/Icarus603/minimal-beamer",
+  "repository": "https://github.com/Icarus603/minimal-beamer",
+  "license": "MIT",
+  "keywords": ["latex", "beamer", "presentation", "slides", "academic", "template"]
+}
