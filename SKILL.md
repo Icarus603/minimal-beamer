@@ -50,20 +50,31 @@ These exist because every time they were skipped, the result was bad:
    spots once they see the rendered slides. Plan for revision rounds; do
    not try to skip them.
 
+## Script compatibility
+
+All bundled scripts are **bash** (`check_env.sh`, `build.sh`, `preview.sh`,
+`clean.sh`). They run directly on **macOS and Linux**. On **Windows**:
+
+- **WSL** (Windows Subsystem for Linux) — recommended. LaTeX works much
+  better on Linux, and the bash scripts run natively inside the WSL distro.
+  Install TeX Live via `apt` inside WSL.
+- **Git Bash** (included with Git for Windows) — can run the scripts if
+  LaTeX is on its `PATH`. `check_env.sh` attempts to detect `MINGW*`/`MSYS*`.
+- **Native PowerShell / CMD** — not supported. LaTeX itself (MiKTeX or TeX
+  Live for Windows) works, but the scripts need bash. If the user is on
+  native Windows without bash, instruct them to install Git Bash or WSL
+  first, then proceed.
+
+All command examples in this skill assume bash syntax. Adapt invocation as
+needed if the user's terminal runs something else (e.g. `bash script.sh`
+instead of `./script.sh`).
+
 ## Step 0 — Check the LaTeX environment (do this FIRST, before clarification)
 
-Run the bundled environment-check script. **All scripts ship in dual
-variants:** `.sh` for macOS / Linux / WSL, `.ps1` for Windows PowerShell.
-Pick the variant matching the user's OS — behavior is identical.
+Run the bundled environment-check script:
 
 ```bash
-# macOS / Linux / WSL
-bash ${CLAUDE_PLUGIN_ROOT}/scripts/check_env.sh
-```
-
-```powershell
-# Windows PowerShell
-& "${env:CLAUDE_PLUGIN_ROOT}\scripts\check_env.ps1"
+bash ~/.claude/skills/minimal-beamer/scripts/check_env.sh
 ```
 
 It detects the OS, looks for `pdflatex` / `xelatex` / `lualatex` / `latexmk`
@@ -378,13 +389,6 @@ Rules:
 
 ## Step 3 — Build the deck from the template
 
-**Script selection reminder.** Steps 3–5 invoke bundled scripts. All four
-scripts ship in `.sh` (macOS / Linux / WSL) and `.ps1` (Windows PowerShell)
-variants with identical behavior. The code blocks below show the bash
-syntax; on Windows PowerShell, substitute `.sh` → `.ps1` and use
-`& "${env:CLAUDE_PLUGIN_ROOT}\scripts\<name>.ps1"` instead of
-`bash ${CLAUDE_PLUGIN_ROOT}/scripts/<name>.sh`.
-
 ### Source / build separation
 
 The skill keeps source files clean and isolates compile artifacts in a
@@ -412,7 +416,7 @@ Why: keeps the deck dir scannable, plays nicely with `git init`, and lets
 
 1. Copy the template into the working directory:
    ```bash
-   cp -r ${CLAUDE_PLUGIN_ROOT}/assets/template/ ./<deck-name>/
+   cp -r ~/.claude/skills/minimal-beamer/assets/template/ ./<deck-name>/
    ```
    Use a sensible directory name based on the talk title.
 2. Edit `main.tex` in place. Update `\title`, `\author`, `\institute`,
@@ -442,7 +446,7 @@ whitespace. If a frame is overflowing, split it or add `[allowframebreaks]`.
 Run the build script and fix anything it reports:
 
 ```bash
-bash ${CLAUDE_PLUGIN_ROOT}/scripts/build.sh ./<deck-name>/main.tex
+bash ~/.claude/skills/minimal-beamer/scripts/build.sh ./<deck-name>/main.tex
 ```
 
 The PDF lands at `./<deck-name>/build/main.pdf`. All intermediate files
@@ -457,7 +461,7 @@ detects and uses `xelatex`. Read the log on failure, fix the actual error
 
 To wipe build artifacts (e.g. before sharing the source):
 ```bash
-bash ${CLAUDE_PLUGIN_ROOT}/scripts/clean.sh ./<deck-name>/
+bash ~/.claude/skills/minimal-beamer/scripts/clean.sh ./<deck-name>/
 # or  ... clean.sh ./<deck-name>/ --all   # also removes stray intermediates next to .tex
 ```
 
@@ -473,7 +477,7 @@ Use the bundled rasterizer to convert the PDF to per-slide PNGs. Point it
 at the built PDF (which lives under `build/`):
 
 ```bash
-bash ${CLAUDE_PLUGIN_ROOT}/scripts/preview.sh ./<deck-name>/build/main.pdf
+bash ~/.claude/skills/minimal-beamer/scripts/preview.sh ./<deck-name>/build/main.pdf
 ```
 
 This drops PNGs into `./<deck-name>/build/_preview/slide-NN.png` (one per
@@ -646,17 +650,16 @@ the work. The .tex is just the artifact.
 - `references/compile-troubleshooting.md` — common LaTeX/Beamer error
   patterns and fixes
 - `assets/template/` — the canonical template; copy this, do not rewrite it
-- `scripts/check_env.sh` / `check_env.ps1` — Step 0: detects OS + which
-  TeX engines and helpers are on PATH; exit 0 = ready, 1 = partial,
-  2 = missing. `.sh` for macOS/Linux/WSL, `.ps1` for Windows PowerShell.
-- `scripts/build.sh` / `build.ps1` — compile entry point; picks
-  `pdflatex` vs `xelatex` based on detected `xeCJK`/`fontspec` in the
-  source; writes all outputs (PDF + intermediates) to `<deck>/build/`,
-  auto-creates `.gitignore`, parses log on failure. Dual variant.
-- `scripts/preview.sh` / `preview.ps1` — rasterize the built PDF into
-  per-slide PNGs at `<deck>/build/_preview/slide-NN.png`, so you can
-  `Read` them and visually QA the deck (uses `pdftoppm` from Poppler).
-  Dual variant.
-- `scripts/clean.sh` / `clean.ps1` — wipe `<deck>/build/`. Pass `--all`
-  to also remove any stray `.aux`/`.log`/etc. siblings of `main.tex`.
-  Source files are never touched. Dual variant.
+- `scripts/check_env.sh` — Step 0: detects OS + which TeX engines and
+  helpers are on PATH; exit 0 = ready, 1 = partial, 2 = missing
+- `scripts/build.sh` — compile entry point; picks `pdflatex` vs `xelatex`
+  based on detected `xeCJK`/`fontspec` in the source, prefers `latexmk`
+  when present, falls back to a manual multi-pass; writes all outputs
+  (PDF + intermediates) to `<deck>/build/`, auto-creates `.gitignore`,
+  parses log on failure
+- `scripts/preview.sh` — rasterize the built PDF (`<deck>/build/main.pdf`)
+  into per-slide PNGs at `<deck>/build/_preview/slide-NN.png`, so you can
+  `Read` them and visually QA the deck (uses `pdftoppm` from Poppler)
+- `scripts/clean.sh` — wipe `<deck>/build/`. Pass `--all` to also remove
+  any stray `.aux`/`.log`/etc. siblings of `main.tex`. Source files are
+  never touched.
