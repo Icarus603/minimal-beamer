@@ -5,7 +5,7 @@ Build a LaTeX Beamer presentation from the bundled minimal template. Use wheneve
 **Install in 30 seconds** (Claude Code CLI / VS Code / JetBrains):
 
 ```text
-/plugin marketplace add Icarus603/minimal-beamer
+/plugin marketplace add https://github.com/Icarus603/minimal-beamer
 /plugin install minimal-beamer
 ```
 
